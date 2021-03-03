@@ -46,42 +46,38 @@ int main() {
         printf("Ошибка! Входные данные некорректны! Чтобы построить угол,"
                " нужно минимум 3 точки, вы ввели %d.", n);
     } else {
-        struct coord p1, p2, p3, p1_copy, p2_copy;
-        struct vector v1, v2;
+        struct coord p1, p2, p3;
+        struct vector v0, v1, v2;
 
         printf("Введите 1-ю точку:");
         input_point(&p1);
         printf("Введите 2-ю точку:");
         input_point(&p2);
-        p1_copy = p1;
-        p2_copy = p2;
-        v1 = create_vector(p1, p2);
-        double max_cos = -2;
-        for (size_t i = 1; i <= n - 2; i++) {
-            printf("Введите %d-ю точку:", 2 + i);
+        printf("Введите 3-ю точку:");
+        input_point(&p3);
+        v0 = create_vector(p1, p2);
+        v1 = v0;
+        v2 = create_vector(p2, p3);
+        double max_cos, cos;
+        max_cos = calc_cos(v1, v2);
+        for (size_t i = 1; i <= n - 3; i++) {
+            v1 = v2;
+            p2 = p3;
+            printf("Введите %d-ю точку:", 3 + i);
             input_point(&p3);
+
             v2 = create_vector(p2, p3);
-            double cos;
+
             cos = calc_cos(v1, v2);
 
             if (cos > max_cos) max_cos = cos;
-
-            p1 = p2;
-            p2 = p3;
         }
-        p2 = p1;
+        struct vector last_v = create_vector(p3,p1);
+        cos = calc_cos(v2, last_v);
+        if (cos > max_cos) max_cos = cos;
+        cos = calc_cos(last_v, v0);
+        if (cos > max_cos) max_cos = cos;
 
-        double last_cos, first_cos;
-        last_cos = calc_cos(create_vector(p2, p3), create_vector(p3,p1_copy));
-        first_cos = calc_cos(create_vector(p3, p1_copy),
-                             create_vector(p1_copy, p2_copy));
-
-        if (last_cos > max_cos) {
-            max_cos = last_cos;
-        }
-        if (first_cos > max_cos) {
-            max_cos = first_cos;
-        }
         double angle;
         angle = acos(-max_cos) * 180 / PI;
         printf("Самый большой угол в данном %d-угольнике равен %lg градусов.",
