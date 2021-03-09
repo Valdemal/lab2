@@ -20,7 +20,7 @@ void input_point(struct coord *p) {
 }
 
 struct vector create_vector(struct coord a, struct coord b){
-    // Возвращает вектор образованный точками a, b
+    // Возвращает вектор, образованный точками a, b
     struct vector v;
     struct coord c = {b.x - a.x, b.y - a.y, b.z - a.z};
     v.c = c;
@@ -33,6 +33,11 @@ double calc_cos(struct vector ab, struct vector bc) {
 
     return (ab.c.x * bc.c.x + ab.c.y * bc.c.y + ab.c.z * bc.c.z)/
            (ab.len * bc.len);
+}
+
+double max_d(double a,double b){
+    /*Возвращает максимальное из значений: a, b */
+    return a > b ? a : b;
 }
 
 int main() {
@@ -56,7 +61,7 @@ int main() {
         v0 = create_vector(p0, p1);
         v2 = v0;
 
-        double max_cos = -1, cos;
+        double max_cos = -1;
 
         for (size_t i = 3; i <= n; i++) {
             v1 = v2;
@@ -65,21 +70,15 @@ int main() {
             input_point(&p2);
 
             v2 = create_vector(p1, p2);
-
-            cos = calc_cos(v1, v2);
-
-            if (cos > max_cos) max_cos = cos;
+            max_cos = max_d(max_cos, calc_cos(v1, v2));
 
             p1 = p2;
         }
 
-        struct vector last_v = create_vector(p2, p0);
+        struct vector v_last = create_vector(p2, p0);
 
-        cos = calc_cos(v2, last_v);
-        if (cos > max_cos) max_cos = cos;
-
-        cos = calc_cos(last_v, v0);
-        if (cos > max_cos) max_cos = cos;
+        max_cos = max_d(max_cos, calc_cos(v2, v_last));
+        max_cos = max_d(max_cos, calc_cos(v_last, v0));
 
         double angle = acos(-max_cos) * 180 / PI;
         printf("Самый большой угол в данном %d-угольнике равен %lg градусов.",
