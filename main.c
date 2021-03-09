@@ -1,4 +1,3 @@
-// Найти величину максимального угла n-угольника, заданного  координатами вершин
 #include <stdio.h>
 #include <stddef.h>
 #include <math.h>
@@ -33,7 +32,7 @@ double calc_cos(struct vector ab, struct vector bc) {
     /* Возвращает значение косинуса угла между векторами ab и bc*/
 
     return (ab.c.x * bc.c.x + ab.c.y * bc.c.y + ab.c.z * bc.c.z)/
-            (ab.len * bc.len);
+           (ab.len * bc.len);
 }
 
 int main() {
@@ -61,7 +60,6 @@ int main() {
 
         for (size_t i = 3; i <= n; i++) {
             v1 = v2;
-            p1 = p2;
 
             printf("Введите %d-ю точку:", i);
             input_point(&p2);
@@ -71,6 +69,8 @@ int main() {
             cos = calc_cos(v1, v2);
 
             if (cos > max_cos) max_cos = cos;
+
+            p1 = p2;
         }
 
         struct vector last_v = create_vector(p2, p0);
