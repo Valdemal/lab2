@@ -39,47 +39,49 @@ double calc_cos(struct vector ab, struct vector bc) {
 int main() {
     SetConsoleOutputCP(CP_UTF8);// Подключение русского языка
 
-    printf("Введите количество углов:");
+    printf("Введите количество вершин:");
     size_t n;
     scanf("%d", &n);
     if (n < 3) {
         printf("Ошибка! Входные данные некорректны! Чтобы построить угол,"
                " нужно минимум 3 точки, вы ввели %d.", n);
     } else {
-        struct coord p1, p2, p3;
+        struct coord p0, p1, p2;
         struct vector v0, v1, v2;
 
         printf("Введите 1-ю точку:");
-        input_point(&p1);
+        input_point(&p0);
         printf("Введите 2-ю точку:");
-        input_point(&p2);
-        printf("Введите 3-ю точку:");
-        input_point(&p3);
-        v0 = create_vector(p1, p2);
-        v1 = v0;
-        v2 = create_vector(p2, p3);
-        double max_cos, cos;
-        max_cos = calc_cos(v1, v2);
-        for (size_t i = 1; i <= n - 3; i++) {
-            v1 = v2;
-            p2 = p3;
-            printf("Введите %d-ю точку:", 3 + i);
-            input_point(&p3);
+        input_point(&p1);
 
-            v2 = create_vector(p2, p3);
+        v0 = create_vector(p0, p1);
+        v2 = v0;
+
+        double max_cos = -1, cos;
+
+        for (size_t i = 3; i <= n; i++) {
+            v1 = v2;
+            p1 = p2;
+
+            printf("Введите %d-ю точку:", i);
+            input_point(&p2);
+
+            v2 = create_vector(p1, p2);
 
             cos = calc_cos(v1, v2);
 
             if (cos > max_cos) max_cos = cos;
         }
-        struct vector last_v = create_vector(p3,p1);
+
+        struct vector last_v = create_vector(p2, p0);
+
         cos = calc_cos(v2, last_v);
         if (cos > max_cos) max_cos = cos;
+
         cos = calc_cos(last_v, v0);
         if (cos > max_cos) max_cos = cos;
 
-        double angle;
-        angle = acos(-max_cos) * 180 / PI;
+        double angle = acos(-max_cos) * 180 / PI;
         printf("Самый большой угол в данном %d-угольнике равен %lg градусов.",
                n, angle);
     }
